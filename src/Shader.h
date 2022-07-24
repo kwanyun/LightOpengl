@@ -22,7 +22,9 @@ public:
     void setInt(const std::string& name, int value) const;
     void setFloat(const std::string& name, float value) const;
     void setVec3(const std::string& name, const float x, const float y, const float z) const;
+    void setVec3(const std::string& name, const glm::vec3& vec3) const;
     void setVec4(const std::string& name, const float x, const float y, const float z, const float w) const;
+    void setVec4(const std::string& name, const glm::vec4& vec4) const;
     void setMat3(const std::string& name, const glm::mat3& mat) const;
     void setMat4(const std::string& name, const glm::mat4& mat) const;
 

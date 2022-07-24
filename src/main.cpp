@@ -140,7 +140,25 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
+        glm::vec3 lightColor;
+        lightColor.x = sin(currentFrame * 2.0f);
+        lightColor.y = sin(currentFrame * 0.7f);
+        lightColor.z = sin(currentFrame * 1.3f);
+
+        glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f); // 영향을 감소시킵니다.
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // 낮은 영향
+
         kwanShader.use();
+
+        kwanShader.setVec3("light.ambient", ambientColor);
+        kwanShader.setVec3("light.diffuse", diffuseColor);
+        kwanShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+        kwanShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+        kwanShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+        kwanShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+        kwanShader.setFloat("material.shininess", 32.0f);
+
         kwanShader.setVec3("objectColor", 1.0f, 0.5f, 0.3f);
         kwanShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
         kwanShader.setVec3("lightPos", lightPos.x, lightPos.y, lightPos.z);
