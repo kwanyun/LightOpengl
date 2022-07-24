@@ -896,6 +896,9 @@
     <ClInclude Include="src\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\glm\detail\func_common.inl">
@@ -1323,6 +1326,7 @@
     <None Include="src\Vertex.Shader" />
     <None Include="src\Fragment.Shader" />
     <None Include="src\lampFragment.Shader" />
+    <None Include="src\lampVertex.Shader" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="x64\Debug\OpenglLight.log" />
@@ -1330,5 +1334,19 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="x64\Debug\Source.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\container2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\container2_specular.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\container2_specular_c.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\matrix.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

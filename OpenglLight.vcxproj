@@ -443,6 +443,7 @@
     <ClInclude Include="include\KHR\khrplatform.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="include\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\glm\detail\func_common.inl" />
@@ -583,6 +584,7 @@
     <None Include="include\glm\gtx\wrap.inl" />
     <None Include="src\Fragment.Shader" />
     <None Include="src\lampFragment.Shader" />
+    <None Include="src\lampVertex.Shader" />
     <None Include="src\Vertex.Shader" />
     <None Include="x64\Debug\LightOpengl.tlog\CL.command.1.tlog" />
     <None Include="x64\Debug\LightOpengl.tlog\CL.read.1.tlog" />
@@ -605,6 +607,12 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="x64\Debug\Source.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\container2.png" />
+    <Image Include="src\container2_specular.png" />
+    <Image Include="src\container2_specular_c.png" />
+    <Image Include="src\matrix.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
