@@ -112,7 +112,20 @@ int main()
         -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
-        
+       
+    glm::vec3 cubePositions[] = {
+    glm::vec3(0.0f,  0.0f,  0.0f),
+    glm::vec3(2.0f,  5.0f, -15.0f),
+    glm::vec3(-1.5f, -2.2f, -2.5f),
+    glm::vec3(-3.8f, -2.0f, -12.3f),
+    glm::vec3(2.4f, -0.4f, -3.5f),
+    glm::vec3(-1.7f,  3.0f, -7.5f),
+    glm::vec3(1.3f, -2.0f, -2.5f),
+    glm::vec3(1.5f,  2.0f, -2.5f),
+    glm::vec3(1.5f,  0.2f, -1.5f),
+    glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+
     GLuint VAO, VBO;
     
     glGenVertexArrays(1, &VAO);
@@ -141,7 +154,7 @@ int main()
    
     unsigned int diffuseMap = loadTexture("src/container2.png");
     unsigned int specularMap = loadTexture("src/container2_specular.png");
-    unsigned int emissionMap = loadTexture("src/matrix.jpg");
+    //unsigned int emissionMap = loadTexture("src/matrix.jpg");
 
     // shader configuration
     // --------------------
@@ -161,17 +174,24 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+        
         kwanShader.use();
         
         kwanShader.setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
         kwanShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
         kwanShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        kwanShader.setFloat("light.constant", 1.0f);
+        kwanShader.setFloat("light.linear", 0.09f);
+        kwanShader.setFloat("light.quadratic", 0.032f);
 
         kwanShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
         kwanShader.setFloat("material.shininess", 64.0f);
 
-        kwanShader.setVec3("light.position", lightPos);
+        kwanShader.setVec3("light.position", camera.Position);
+        kwanShader.setVec3("light.direction", camera.Front);
+        kwanShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+        kwanShader.setFloat("light.outerCutOff", glm::cos(glm::radians(16.f)));
+
         kwanShader.setVec3("viewPos", camera.Position);
 
         // view/projection transformations
@@ -180,29 +200,28 @@ int main()
         kwanShader.setMat4("projection", projection);
         kwanShader.setMat4("view", view);
 
-
-        // world transformation
-        glm::mat4 model = glm::mat4(1.0f);
-        kwanShader.setMat4("model", model);
-
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, diffuseMap);
 
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, specularMap);
 
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, emissionMap);
 
         // render the cube
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-
+        // world transformation
+        for (auto cubePos : cubePositions)
+        {
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), cubePos);
+            model = glm::rotate(model, glm::radians(cubePos.x)*15, cubePos);
+            kwanShader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
         // also draw the lamp object
         lightShader.use();
         lightShader.setMat4("projection", projection);
         lightShader.setMat4("view", view);
-        model = glm::mat4(1.0f);
+        glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
         lightShader.setMat4("model", model);
