@@ -10,17 +10,12 @@
 
 #include <iostream>
 
+//functions
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void KwanGlfwStart();
 void processInput(GLFWwindow* window);
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow* window);
-
 unsigned int loadTexture(char const* path);
 
 // settings
@@ -42,6 +37,7 @@ glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 int main()
 {
+    //init glfw
     KwanGlfwStart();
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
@@ -65,7 +61,7 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     glEnable(GL_DEPTH_TEST);
-    Shader kwanShader = Shader("src/Vertex.Shader", "src/Fragment.Shader");
+    Shader kwanShader = Shader("src/Vertex.Shader", "src/Fragment3_6.Shader");
     Shader lightShader = Shader("src/lampVertex.Shader", "src/lampFragment.Shader");
     
     float vertices[] = {
@@ -112,7 +108,7 @@ int main()
         -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
-       
+    //10 cubes
     glm::vec3 cubePositions[] = {
     glm::vec3(0.0f,  0.0f,  0.0f),
     glm::vec3(2.0f,  5.0f, -15.0f),
@@ -125,6 +121,14 @@ int main()
     glm::vec3(1.5f,  0.2f, -1.5f),
     glm::vec3(-1.3f,  1.0f, -1.5f)
     };
+
+    glm::vec3 pointLightPositions[] = {
+    glm::vec3(0.7f,  0.2f,  2.0f),
+    glm::vec3(2.3f, -3.3f, -4.0f),
+    glm::vec3(-4.0f,  2.0f, -12.0f),
+    glm::vec3(0.0f,  0.0f, -3.0f)
+    };
+
 
     GLuint VAO, VBO;
     
@@ -159,9 +163,52 @@ int main()
     // shader configuration
     // --------------------
     kwanShader.use();
+
     kwanShader.setInt("material.diffuse", 0);
     kwanShader.setInt("material.specular", 1);
-    kwanShader.setInt("material.emission", 2);
+
+    kwanShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+    kwanShader.setVec3("dirLight.ambient", 0.02f, 0.02f, 0.02f);
+    kwanShader.setVec3("dirLight.diffuse", 0.01f, 0.01f, 0.01f);
+    kwanShader.setVec3("dirLight.specular", 0.2f, 0.2f, 0.2f);
+
+    kwanShader.setVec3("pointLights[0].position", pointLightPositions[0]);
+    kwanShader.setVec3("pointLights[0].ambient", 0.02f, 0.02f, 0.02f);
+    kwanShader.setVec3("pointLights[0].diffuse", 0.5f, 0.5f, 0.5f);
+    kwanShader.setVec3("pointLights[0].specular", 0.7f, 0.7f, 0.7f);
+    kwanShader.setFloat("pointLights[0].constant", 1.0f);
+    kwanShader.setFloat("pointLights[0].linear", 0.09f);
+    kwanShader.setFloat("pointLights[0].quadratic", 0.032f);
+
+    kwanShader.setVec3("pointLights[1].position", pointLightPositions[1]);
+    kwanShader.setVec3("pointLights[1].ambient", 0.02f, 0.02f, 0.02f);
+    kwanShader.setVec3("pointLights[1].diffuse", 0.4f, 0.4f, 0.4f);
+    kwanShader.setVec3("pointLights[1].specular", 0.5f, 0.5f, 0.5f);
+    kwanShader.setFloat("pointLights[1].constant", 1.0f);
+    kwanShader.setFloat("pointLights[1].linear", 0.09f);
+    kwanShader.setFloat("pointLights[1].quadratic", 0.032f);
+
+    kwanShader.setVec3("pointLights[2].position", pointLightPositions[2]);
+    kwanShader.setVec3("pointLights[2].ambient", 0.02f, 0.02f, 0.02f);
+    kwanShader.setVec3("pointLights[2].diffuse", 0.4f, 0.4f, 0.4f);
+    kwanShader.setVec3("pointLights[2].specular", 0.5f, 0.5f, 0.5f);
+    kwanShader.setFloat("pointLights[2].constant", 1.0f);
+    kwanShader.setFloat("pointLights[2].linear", 0.09f);
+    kwanShader.setFloat("pointLights[2].quadratic", 0.032f);
+
+    kwanShader.setVec3("pointLights[3].position", pointLightPositions[3]);
+    kwanShader.setVec3("pointLights[3].ambient", 0.02f, 0.02f, 0.02f);
+    kwanShader.setVec3("pointLights[3].diffuse", 0.4f, 0.4f, 0.4f);
+    kwanShader.setVec3("pointLights[3].specular", 0.5f, 0.5f, 0.5f);
+    kwanShader.setFloat("pointLights[3].constant", 1.0f);
+    kwanShader.setFloat("pointLights[3].linear", 0.09f);
+    kwanShader.setFloat("pointLights[3].quadratic", 0.032f);
+
+
+
+    kwanShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    kwanShader.setFloat("material.shininess", 32.0f);
+
 
     while (!glfwWindowShouldClose(window))
     {
@@ -171,29 +218,27 @@ int main()
 
         processInput(window);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.1f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         
         kwanShader.use();
-        
-        kwanShader.setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
-        kwanShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-        kwanShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-        kwanShader.setFloat("light.constant", 1.0f);
-        kwanShader.setFloat("light.linear", 0.09f);
-        kwanShader.setFloat("light.quadratic", 0.032f);
-
-        kwanShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-        kwanShader.setFloat("material.shininess", 64.0f);
-
-        kwanShader.setVec3("light.position", camera.Position);
-        kwanShader.setVec3("light.direction", camera.Front);
-        kwanShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
-        kwanShader.setFloat("light.outerCutOff", glm::cos(glm::radians(16.f)));
-
+       
         kwanShader.setVec3("viewPos", camera.Position);
 
+
+        kwanShader.setVec3("spotLight.position", camera.Position);
+        kwanShader.setVec3("spotLight.direction", camera.Front);
+        kwanShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(5.0f)));
+        kwanShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(8.0f)));
+        
+        kwanShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+        kwanShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+        kwanShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+        kwanShader.setFloat("spotLight.constant", 1.0f);
+        kwanShader.setFloat("spotLight.linear", 0.09f);
+        kwanShader.setFloat("spotLight.quadratic", 0.032f);
+        
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
@@ -206,6 +251,8 @@ int main()
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, specularMap);
 
+        //glActiveTexture(GL_TEXTURE2);
+        //glBindTexture(GL_TEXTURE_2D, emissionMap);
 
         // render the cube
         glBindVertexArray(VAO);
@@ -213,22 +260,28 @@ int main()
         for (auto cubePos : cubePositions)
         {
             glm::mat4 model = glm::translate(glm::mat4(1.0f), cubePos);
-            model = glm::rotate(model, glm::radians(cubePos.x)*15, cubePos);
+            model = glm::rotate(model, glm::radians(cubePos.x)* camera.Position.x*100+ currentFrame, cubePos);
             kwanShader.setMat4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
-        // also draw the lamp object
+
         lightShader.use();
         lightShader.setMat4("projection", projection);
         lightShader.setMat4("view", view);
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-        lightShader.setMat4("model", model);
-        
-        glBindVertexArray(LightVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
 
+        glBindVertexArray(LightVAO);
+        for (auto pointLightPos : pointLightPositions)
+        {
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), pointLightPos);
+            if(pointLightPos== pointLightPositions[0])
+                model = glm::scale(model, glm::vec3(0.4f)); // bigger cube
+            else
+                model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+            lightShader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -240,7 +293,6 @@ int main()
     glfwTerminate();
 
     return 0;
-
 }
 
 void KwanGlfwStart()
@@ -274,7 +326,6 @@ void processInput(GLFWwindow* window)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
-
 }
 
 // glfw: whenever the mouse moves, this callback is called
