@@ -46,6 +46,7 @@ static const float LanternMAX = 25.0f;
 float lanternValue=10.0f;
 //your lights
 bool lightsOn[6] = {1,1,1,1,1,0};
+bool phongOn[3] = { 1,1,1 };
 
 int main()
 {
@@ -211,12 +212,23 @@ int main()
 
         if (lightsOn[5])
         {
-            kwanShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-            kwanShader.setVec3("dirLight.diffuse", 0.6f, 0.6f, 0.6f);
-            kwanShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
+            if(phongOn[0])
+                kwanShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+            else
+                kwanShader.setVec3("dirLight.ambient", 0.0f, 0.0f, 0.0f);
+            if(phongOn[1])
+                kwanShader.setVec3("dirLight.diffuse", 0.6f, 0.6f, 0.6f);
+            else
+                kwanShader.setVec3("dirLight.diffuse", 0.0f, 0.0f, 0.0f);
+            if (phongOn[2])
+                kwanShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
+            else
+                kwanShader.setVec3("dirLight.specular", 0.0f, 0.0f, 0.0f);
+
         }
         else
         {
+            kwanShader.setVec3("dirLight.ambient", 0.0f, 0.0f, 0.0f);
             kwanShader.setVec3("dirLight.diffuse", 0.0f, 0.0f, 0.0f);
             kwanShader.setVec3("dirLight.specular", 0.0f, 0.0f, 0.0f);
         }
@@ -236,11 +248,19 @@ int main()
         kwanShader.setVec3("spotLight.direction", camera.Front);
         kwanShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(LanternMIN)));
         
+        kwanShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+
         if (lightsOn[0])
         {
             kwanShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(lanternValue)));
-            kwanShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-            kwanShader.setVec3("spotLight.specular", 1.2f, 1.2f, 1.2f);
+            if (phongOn[1])
+                kwanShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+            else
+                kwanShader.setVec3("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
+            if (phongOn[2])
+                kwanShader.setVec3("spotLight.specular", 1.2f, 1.2f, 1.2f);
+            else
+                kwanShader.setVec3("spotLight.specular", 0.0f, 0.0f, 0.0f);
         }
         else
         {
@@ -302,12 +322,12 @@ int main()
         }
 
         {
-            ImGui::Begin("Light Controller");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::Begin("Light Controller");                          
 
             ImGui::Text("Controll the Lights");               // Display some text (you can use a format strings too)
             ImGui::Checkbox("Sun light", &lightsOn[5]);
             ImGui::Checkbox("Lantern", &lightsOn[0]);
-
+            ImGui::Dummy(ImVec2(0.0f, 20.0f));
             ImGui::Checkbox("Main Light", &lightsOn[1]);     
             ImGui::Checkbox("SubLight1", &lightsOn[2]);
             ImGui::Checkbox("SubLight2", &lightsOn[3]);
@@ -319,6 +339,15 @@ int main()
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();
+
+            ImGui::Begin("Phong indices");
+            
+            ImGui::Checkbox("ambient", &phongOn[0]);
+            ImGui::Checkbox("diffuse", &phongOn[1]);
+            ImGui::Checkbox("specular", &phongOn[2]);
+
+            ImGui::End();
+
         }
         // Rendering
         ImGui::Render();
@@ -472,14 +501,34 @@ void SetPointLights(const Shader& shader, const glm::vec3& position ,int place, 
 
         if (isBig)
         {
-            shader.setVec3(Lightambient, 0.03f, 0.03f, 0.03f);
-            shader.setVec3(Lightdiffuse, mainLightColor);
-            shader.setVec3(Lightspecular, 1.0f, 1.0f, 1.0f);
+            if (phongOn[0])
+                shader.setVec3(Lightambient, 0.03f, 0.03f, 0.03f);
+            else
+                shader.setVec3(Lightambient, 0.00f, 0.00f, 0.00f);
+
+            if (phongOn[1])
+                shader.setVec3(Lightdiffuse, mainLightColor);
+            else
+                shader.setVec3(Lightdiffuse, 0.0f, 0.0f, 0.0f);
+            if (phongOn[2])
+                shader.setVec3(Lightspecular, 1.0f, 1.0f, 1.0f);
+            else
+                shader.setVec3(Lightspecular, 0.0f, 0.0f, 0.0f);
+
         }
         else {
-            shader.setVec3(Lightambient, 0.02f, 0.02f, 0.02f);
-            shader.setVec3(Lightdiffuse, 0.4f, 0.4f, 0.4f);
-            shader.setVec3(Lightspecular, 0.5f, 0.5f, 0.5f);
+            if (phongOn[0])
+                shader.setVec3(Lightambient, 0.02f, 0.02f, 0.02f);
+            else
+                shader.setVec3(Lightambient, 0.00f, 0.00f, 0.00f);
+            if (phongOn[1])
+                shader.setVec3(Lightdiffuse, 0.4f, 0.4f, 0.4f);
+            else
+                shader.setVec3(Lightdiffuse, 0.0f, 0.0f, 0.0f);
+            if (phongOn[2])
+                shader.setVec3(Lightspecular, 0.5f, 0.5f, 0.5f);
+            else
+                shader.setVec3(Lightspecular, 0.0f, 0.0f, 0.0f);
         }
         std::string Lightlinear = "pointLights[" + std::to_string(place) + "].linear";
         std::string Lightquadratic = "pointLights[" + std::to_string(place) + "].quadratic";
