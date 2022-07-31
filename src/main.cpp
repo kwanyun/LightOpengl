@@ -25,24 +25,27 @@ void SetPointLights(const Shader& shader,const glm::vec3& position,  int place, 
 unsigned int loadTexture(char const* path);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
-
+bool cameraMoveable = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // lighting
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-
+glm::vec3 mainLightColor(1.0f, 1.0f, 1.0f);
+static const float LanternMIN = 5.0f;
+static const float LanternMAX = 25.0f;
+float lanternValue=10.0f;
 //your lights
-bool lightsOn[5] = {1,1,1,1,1};
+bool lightsOn[6] = {1,1,1,1,1,0};
 
 int main()
 {
@@ -127,16 +130,16 @@ int main()
     };
     //10 cubes
     glm::vec3 cubePositions[] = {
-    glm::vec3(0.0f,  0.0f,  0.0f),
-    glm::vec3(2.0f,  5.0f, -15.0f),
-    glm::vec3(-1.5f, -2.2f, -2.5f),
-    glm::vec3(-3.8f, -2.0f, -12.3f),
-    glm::vec3(2.4f, -0.4f, -3.5f),
-    glm::vec3(-1.7f,  3.0f, -7.5f),
-    glm::vec3(1.3f, -2.0f, -2.5f),
-    glm::vec3(1.5f,  2.0f, -2.5f),
-    glm::vec3(1.5f,  0.2f, -1.5f),
-    glm::vec3(-1.3f,  1.0f, -1.5f)
+    glm::vec3(0.0f,  0.0f,    0.0f),
+    glm::vec3(4.0f,  0.0f,  -15.0f),
+    glm::vec3(-3.0f, 0.0f,  -2.5f),
+    glm::vec3(-5.0f, 0.0f, -12.3f),
+    glm::vec3(5.0f,  0.0f,   6.5f),
+    glm::vec3(-4.7f, 0.0f,  -7.5f),
+    glm::vec3(2.5f,  0.0f,   -2.5f),
+    glm::vec3(6.0f,  0.0f,   -1.5f),
+    glm::vec3(5.0f,  0.0f,   -3.5f),
+    glm::vec3(-1.5f, 0.0f,  -1.5f)
     };
 
     glm::vec3 pointLightPositions[] = {
@@ -196,7 +199,7 @@ int main()
 
         processInput(window);
 
-        glClearColor(0.1f, 0.2f, 0.2f, 1.0f);
+        glClearColor(0.01f, 0.02f, 0.02f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         ImGui_ImplOpenGL3_NewFrame();
@@ -204,11 +207,20 @@ int main()
         ImGui::NewFrame();
 
         kwanShader.use();
-
         kwanShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-        kwanShader.setVec3("dirLight.ambient", 0.01f, 0.01f, 0.01f);
-        kwanShader.setVec3("dirLight.diffuse", 0.0f, 0.0f, 0.0f);
-        kwanShader.setVec3("dirLight.specular", 0.0f, 0.0f, 0.0f);
+
+        if (lightsOn[5])
+        {
+            kwanShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+            kwanShader.setVec3("dirLight.diffuse", 0.6f, 0.6f, 0.6f);
+            kwanShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
+        }
+        else
+        {
+            kwanShader.setVec3("dirLight.diffuse", 0.0f, 0.0f, 0.0f);
+            kwanShader.setVec3("dirLight.specular", 0.0f, 0.0f, 0.0f);
+        }
+        
 
         for (int i = 0; i < sizeof(pointLightPositions)/sizeof(pointLightPositions[0]); i++)
         {
@@ -222,12 +234,19 @@ int main()
 
         kwanShader.setVec3("spotLight.position", camera.Position);
         kwanShader.setVec3("spotLight.direction", camera.Front);
-        kwanShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(5.0f)));
-        kwanShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(8.0f)));
+        kwanShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(LanternMIN)));
         
-        kwanShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-        kwanShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-        kwanShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+        if (lightsOn[0])
+        {
+            kwanShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(lanternValue)));
+            kwanShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+            kwanShader.setVec3("spotLight.specular", 1.2f, 1.2f, 1.2f);
+        }
+        else
+        {
+            kwanShader.setVec3("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
+            kwanShader.setVec3("spotLight.specular", 0.0f, 0.0f, 0.0f);
+        }
         kwanShader.setFloat("spotLight.constant", 1.0f);
         kwanShader.setFloat("spotLight.linear", 0.09f);
         kwanShader.setFloat("spotLight.quadratic", 0.032f);
@@ -269,30 +288,34 @@ int main()
             glm::vec3 pointLightPos = pointLightPositions[i];
             glm::mat4 model = glm::translate(glm::mat4(1.0f), pointLightPos);
             if (i == 0)
+            { 
+                lightShader.setVec3("vColor", mainLightColor);
                 model = glm::scale(model, glm::vec3(0.4f)); // bigger cube
+            }
             else
+            {
+                lightShader.setVec3("vColor", 1.0f,1.0f,1.0f);
                 model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+            }
             lightShader.setMat4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
-                {
-            static float f = 0.0f;
-            static int counter = 0;
+        {
+            ImGui::Begin("Light Controller");                          // Create a window called "Hello, world!" and append into it.
 
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::Text("Controll the Lights");               // Display some text (you can use a format strings too)
+            ImGui::Checkbox("Sun light", &lightsOn[5]);
+            ImGui::Checkbox("Lantern", &lightsOn[0]);
 
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &lightsOn[1]);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &lightsOn[2]);
+            ImGui::Checkbox("Main Light", &lightsOn[1]);     
+            ImGui::Checkbox("SubLight1", &lightsOn[2]);
+            ImGui::Checkbox("SubLight2", &lightsOn[3]);
+            ImGui::Checkbox("SubLight3", &lightsOn[4]);
 
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            //ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+            ImGui::ColorEdit3("Main color", (float*)&mainLightColor); // Edit 3 floats representing a color
+            ImGui::SliderFloat ("Lantern Block", (float*)&lanternValue,LanternMIN+1,LanternMAX); // Edit 3 floats representing a color
 
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();
@@ -352,31 +375,12 @@ void processInput(GLFWwindow* window)
         camera.ProcessKeyboard(Camera_Movement::RIGHT, deltaTime);
 
     //Change Light
-    bool LastButtons[5] = {false,false,false,false,false};
-    if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-    {
-        if (LastButtons[1] == false)
-        {
-            lightsOn[1] = !lightsOn[1];
-            LastButtons[1] = true;
-        }
-    }
-    else if(glfwGetKey(window, GLFW_KEY_Z) == GLFW_RELEASE)
-    {
-        LastButtons[1] = false;
-    }
-    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) != GLFW_REPEAT)
-    {
-        lightsOn[2] = !lightsOn[2];
-        LastButtons[2] = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_C) != GLFW_REPEAT)
-    {
-        lightsOn[3] = !lightsOn[3];
-        LastButtons[3] = true;
-    }
-    //if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_V) != GLFW_REPEAT)
-    //    lightsOn[3] = !lightsOn[3];
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        cameraMoveable = false;
+    else if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_RELEASE)
+        cameraMoveable = true;
+
+
 }
 
 
@@ -391,7 +395,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
-
+    
     if (firstMouse)
     {
         lastX = xpos;
@@ -404,15 +408,17 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
     lastX = xpos;
     lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    if(cameraMoveable)
+        camera.ProcessMouseMovement(xoffset, yoffset);
+    
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    camera.ProcessMouseScroll(static_cast<float>(yoffset));
+    if(cameraMoveable)
+        camera.ProcessMouseScroll(static_cast<float>(yoffset));
 
 }
 
@@ -467,7 +473,7 @@ void SetPointLights(const Shader& shader, const glm::vec3& position ,int place, 
         if (isBig)
         {
             shader.setVec3(Lightambient, 0.03f, 0.03f, 0.03f);
-            shader.setVec3(Lightdiffuse, 0.8f, 0.8f, 0.8f);
+            shader.setVec3(Lightdiffuse, mainLightColor);
             shader.setVec3(Lightspecular, 1.0f, 1.0f, 1.0f);
         }
         else {
