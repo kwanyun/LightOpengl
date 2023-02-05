@@ -82,53 +82,57 @@ int main()
 
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+
     Shader kwanShader = Shader("src/Vertex.Shader", "src/Fragment.Shader");
     Shader lightShader = Shader("src/lampVertex.Shader", "src/lampFragment.Shader");
     
     float vertices[] = {
-        // positions          // normals           // texture coords
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
+    // positions             // normals           // texture coords
+     //back
+     -0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+      0.5f,  0.5f, -0.5f,    0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+      0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+      0.5f,  0.5f, -0.5f,    0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+     -0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+     -0.5f,  0.5f, -0.5f,    0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+    // Front face
+     -0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+      0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,  1.0f, 0.0f,
+      0.5f,  0.5f,  0.5f,    0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+      0.5f,  0.5f,  0.5f,    0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+     -0.5f,  0.5f,  0.5f,    0.0f,  0.0f,  1.0f,  0.0f, 1.0f,
+     -0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+    // Left face
+     -0.5f,  0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+     -0.5f,  0.5f, -0.5f,   -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+     -0.5f, -0.5f, -0.5f,   -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+     -0.5f, -0.5f, -0.5f,   -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+     -0.5f, -0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+     -0.5f,  0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+    // Right face
+      0.5f,  0.5f,  0.5f,    1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+      0.5f, -0.5f, -0.5f,    1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+      0.5f,  0.5f, -0.5f,    1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+      0.5f, -0.5f, -0.5f,    1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+      0.5f,  0.5f,  0.5f,    1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+      0.5f, -0.5f,  0.5f,    1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+     // Bottom face
+     -0.5f, -0.5f, -0.5f,    0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f,    0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+      0.5f, -0.5f,  0.5f,    0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+      0.5f, -0.5f,  0.5f,    0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+     -0.5f, -0.5f,  0.5f,    0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+     -0.5f, -0.5f, -0.5f,    0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+     // Top face
+     -0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+      0.5f,  0.5f,  0.5f,    0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+      0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+      0.5f,  0.5f,  0.5f,    0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+     -0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+     -0.5f,  0.5f,  0.5f,    0.0f,  1.0f,  0.0f,  0.0f, 0.0f 
     };
+
     //10 cubes
     glm::vec3 cubePositions[] = {
     glm::vec3(0.0f,  0.0f,    0.0f),
@@ -156,10 +160,11 @@ int main()
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
     glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
+
+    //glBindVertexArray(VAO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
@@ -188,7 +193,6 @@ int main()
     kwanShader.setInt("material.diffuse", 0);
     kwanShader.setInt("material.specular", 1);
 
-    kwanShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
     kwanShader.setFloat("material.shininess", 32.0f);
 
 
@@ -200,12 +204,14 @@ int main()
 
         processInput(window);
 
-        glClearColor(0.01f, 0.02f, 0.02f, 1.0f);
+        glClearColor(0.0, 0.0, 0.0, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        
 
         kwanShader.use();
         kwanShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
@@ -213,7 +219,7 @@ int main()
         if (lightsOn[5])
         {
             if(phongOn[0])
-                kwanShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+                kwanShader.setVec3("dirLight.ambient", 0.1f, 0.1f, 0.1f);
             else
                 kwanShader.setVec3("dirLight.ambient", 0.0f, 0.0f, 0.0f);
             if(phongOn[1])
@@ -246,19 +252,19 @@ int main()
 
         kwanShader.setVec3("spotLight.position", camera.Position);
         kwanShader.setVec3("spotLight.direction", camera.Front);
-        kwanShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(LanternMIN)));
+        kwanShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(lanternValue)));
         
-        kwanShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+        kwanShader.setVec3("spotLight.ambient", 0.05f, 0.05f, 0.05f);
 
         if (lightsOn[0])
         {
-            kwanShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(lanternValue)));
+            kwanShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(lanternValue+1)));
             if (phongOn[1])
                 kwanShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
             else
                 kwanShader.setVec3("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
             if (phongOn[2])
-                kwanShader.setVec3("spotLight.specular", 1.2f, 1.2f, 1.2f);
+                kwanShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
             else
                 kwanShader.setVec3("spotLight.specular", 0.0f, 0.0f, 0.0f);
         }
@@ -282,9 +288,8 @@ int main()
 
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, specularMap);
+        
 
-        //glActiveTexture(GL_TEXTURE2);
-        //glBindTexture(GL_TEXTURE_2D, emissionMap);
 
         // render the cube
         glBindVertexArray(VAO);
@@ -334,7 +339,7 @@ int main()
             ImGui::Checkbox("SubLight3", &lightsOn[4]);
 
             ImGui::ColorEdit3("Main color", (float*)&mainLightColor); // Edit 3 floats representing a color
-            ImGui::SliderFloat ("Lantern Block", (float*)&lanternValue,LanternMIN+1,LanternMAX); // Edit 3 floats representing a color
+            ImGui::SliderFloat ("Lantern Size", (float*)&lanternValue,LanternMIN,LanternMAX); // Edit 3 floats representing a color
 
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

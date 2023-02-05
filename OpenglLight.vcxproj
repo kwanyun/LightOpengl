@@ -603,6 +603,8 @@
     <None Include="src\Fragment.Shader" />
     <None Include="src\lampFragment.Shader" />
     <None Include="src\lampVertex.Shader" />
+    <None Include="src\screen.fs" />
+    <None Include="src\screen.vs" />
     <None Include="src\Vertex.Shader" />
     <None Include="x64\Debug\LightOpengl.tlog\CL.command.1.tlog" />
     <None Include="x64\Debug\LightOpengl.tlog\CL.read.1.tlog" />

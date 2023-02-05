@@ -1375,6 +1375,8 @@
     <None Include="src\lampFragment.Shader" />
     <None Include="src\lampVertex.Shader" />
     <None Include="src\Fragment.Shader" />
+    <None Include="src\screen.vs" />
+    <None Include="src\screen.fs" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="x64\Debug\OpenglLight.log" />

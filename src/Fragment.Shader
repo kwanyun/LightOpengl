@@ -61,8 +61,12 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
+float near = 0.1;
+float far = 100.0;
+
 void main()
 {
+    
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
     //directional light
@@ -72,6 +76,9 @@ void main()
         sumLight += CalcPointLight(pointLights[i], norm, FragPos, viewDir);
 
     sumLight += CalcSpotLight(spotLight, norm, FragPos, viewDir);
+    
+    //emission light
+    //sumLight += texture(material.emission, TexCoords).rgb;
 
     FragColor = vec4(sumLight, 1.0);
 }
